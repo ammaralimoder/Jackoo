@@ -164,8 +164,8 @@ stages:
             condition: and(succeeded(), startsWith(variables['runtime'], 'win'))
             inputs:
               command: test
-              projects: '**/*.sln'
-              arguments: '--configuration $(buildConfiguration) --framework $(framework) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[*]*" /p:IncludeTestAssembly=true'
+              projects: '**\*.sln'
+              arguments: '--configuration $(buildConfiguration) --framework $(framework) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[*]*" /p:ExcludeByFile="**\*.IntegrationTests\*" /p:IncludeTestAssembly=true'
               testRunTitle: 'Unit - $(buildDescription) - $(Build.BuildId)'
 
           - task: DotNetCoreCLI@2
@@ -181,7 +181,7 @@ stages:
             condition: and(succeeded(), startsWith(variables['runtime'], 'win'))
             inputs:
               targetType: inline
-              script: ./reportgenerator -reports:$(Build.SourcesDirectory)\src\*.Test*\coverage.*.cobertura.xml -targetdir:$(Build.SourcesDirectory)\coverlet\reports\ -sourcedirs:$(Build.SourcesDirectory)\src\ -reporttypes:"Cobertura"
+              script: ./reportgenerator -reports:$(Build.SourcesDirectory)\src\**\coverage.*.cobertura.xml -targetdir:$(Build.SourcesDirectory)\coverlet\reports\ -sourcedirs:$(Build.SourcesDirectory)\src\ -reporttypes:"Cobertura"
 
           - task: PublishCodeCoverageResults@1
             displayName: Publish Code Coverage (Windows only)
