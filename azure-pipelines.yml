@@ -196,6 +196,7 @@ stages:
             inputs:
               codeCoverageTool: Cobertura
               summaryFileLocation: $(Build.SourcesDirectory)\coverlet\reports\Cobertura.xml
+              pathToSources: $(Build.SourcesDirectory)\src\
               failIfCoverageEmpty: true
 
   - stage: BuildJackett
