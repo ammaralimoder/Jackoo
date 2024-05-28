@@ -168,27 +168,12 @@ stages:
               arguments: '--configuration $(buildConfiguration) --framework $(framework) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:IncludeTestAssembly=true'
               testRunTitle: 'Unit - $(buildDescription) - $(Build.BuildId)'
 
-          - task: DotNetCoreCLI@2
-            displayName: Install Coverage ReportGenerator Tool (Windows only)
-            condition: and(succeeded(), startsWith(variables['runtime'], 'win'))
-            inputs:
-              command: custom
-              custom: tool
-              arguments: install --tool-path . dotnet-reportgenerator-globaltool
-
-          - task: PowerShell@2
-            displayName: Generate Coverage Report (Windows only)
-            condition: and(succeeded(), startsWith(variables['runtime'], 'win'))
-            inputs:
-              targetType: inline
-              script: .\reportgenerator -reports:$(Build.SourcesDirectory)\src\*.Test*\coverage.*.cobertura.xml -targetdir:$(Build.SourcesDirectory)\coverlet\reports\ -sourcedirs:$(Build.SourcesDirectory)\src\ -reporttypes:"Cobertura"
-
           - task: PublishCodeCoverageResults@1
             displayName: Publish Code Coverage (Windows only)
             condition: and(succeeded(), startsWith(variables['runtime'], 'win'))
             inputs:
               codeCoverageTool: Cobertura
-              summaryFileLocation: $(Build.SourcesDirectory)\coverlet\reports\Cobertura.xml
+              summaryFileLocation: $(Agent.TempDirectory)\**\coverage.cobertura.xml
               pathToSources: $(Build.SourcesDirectory)\src\
               failIfCoverageEmpty: true
 
