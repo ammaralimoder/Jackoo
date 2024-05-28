@@ -164,8 +164,15 @@ stages:
             condition: and(succeeded(), startsWith(variables['runtime'], 'win'))
             inputs:
               command: test
-              projects: '**\*.sln'
-              arguments: '--configuration $(buildConfiguration) --framework $(framework) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:ExcludeByFile="**\*.IntegrationTests\*.csproj" /p:IncludeTestAssembly=true'
+              projects: |
+                **\*.Test*\*.csproj
+                **\*.Service*\*.csproj
+                **\*.Tray*\*.csproj
+                **\*.Updater*\*.csproj
+                **\DateTimeRoutines*\*.csproj
+                **\*.Common*\*.csproj
+                **\*.Server*\*.csproj
+              arguments: '--configuration $(buildConfiguration) --framework $(framework) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[*]*" /p:IncludeTestAssembly=true'
               testRunTitle: 'Unit - $(buildDescription) - $(Build.BuildId)'
 
           - task: DotNetCoreCLI@2
