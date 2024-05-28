@@ -151,12 +151,19 @@ stages:
               installationPath: $(Agent.ToolsDirectory)/dotnet
 
           - task: DotNetCoreCLI@2
+            displayName: Build Test Project
+            inputs:
+              command: build
+              projects: '**/*.Test*/*.csproj'
+              arguments: '--configuration $(buildConfiguration) --runtime $(runtime) --framework $(framework) --self-contained'
+
+          - task: DotNetCoreCLI@2
             displayName: Unit Tests (Mono, Linux and macOS)
             condition: and(succeeded(), not(startsWith(variables['runtime'], 'win')))
             inputs:
               command: test
               projects: '**/*.Test*/*.csproj'
-              arguments: '--configuration $(buildConfiguration) --runtime $(runtime) --framework $(framework)'
+              arguments: '--configuration $(buildConfiguration) --runtime $(runtime) --framework $(framework) --no-build'
               testRunTitle: 'Unit - $(buildDescription) - $(Build.BuildId)'
 
           - task: DotNetCoreCLI@2
@@ -165,7 +172,7 @@ stages:
             inputs:
               command: test
               projects: '**/*.Test*/*.csproj'
-              arguments: '--configuration $(buildConfiguration) --runtime $(runtime) --framework $(framework) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[*]*" /p:IncludeTestAssembly=true'
+              arguments: '--configuration $(buildConfiguration) --runtime $(runtime) --framework $(framework) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[*]*" /p:IncludeTestAssembly=true'
               testRunTitle: 'Unit - $(buildDescription) - $(Build.BuildId)'
 
           - task: DotNetCoreCLI@2
