@@ -165,7 +165,7 @@ stages:
             inputs:
               command: test
               projects: '**\*.sln'
-              arguments: '--configuration $(buildConfiguration) --framework $(framework) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[*]*" /p:ExcludeByFile="**/*.IntegrationTests/*.cs" /p:IncludeTestAssembly=true'
+              arguments: '--configuration $(buildConfiguration) --framework $(framework) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:ExcludeByFile="**/*.IntegrationTests/*.cs" /p:IncludeTestAssembly=true'
               testRunTitle: 'Unit - $(buildDescription) - $(Build.BuildId)'
 
           - task: DotNetCoreCLI@2
