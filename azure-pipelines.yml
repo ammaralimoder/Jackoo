@@ -160,20 +160,12 @@ stages:
               testRunTitle: 'Unit - $(buildDescription) - $(Build.BuildId)'
 
           - task: DotNetCoreCLI@2
-            displayName: Build Test Project & Code Coverage (Windows only)
-            condition: and(succeeded(), startsWith(variables['runtime'], 'win'))
-            inputs:
-              command: build
-              projects: '**/*.Service*/*.csproj'
-              arguments: '--configuration $(buildConfiguration) --runtime $(runtime) --framework $(framework)-windows --self-contained /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[*]*" /p:IncludeTestAssembly=true'
-
-          - task: DotNetCoreCLI@2
-            displayName: Unit Tests (Windows only)
+            displayName: Unit Tests & Code Coverage (Windows only)
             condition: and(succeeded(), startsWith(variables['runtime'], 'win'))
             inputs:
               command: test
               projects: '**\*.Test*\*.csproj'
-              arguments: '--configuration $(buildConfiguration) --runtime $(runtime) --framework $(framework)-windows --no-build'
+              arguments: '--configuration $(buildConfiguration) --framework $(framework) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:IncludeTestAssembly=true'
               testRunTitle: 'Unit - $(buildDescription) - $(Build.BuildId)'
 
           - task: DotNetCoreCLI@2
