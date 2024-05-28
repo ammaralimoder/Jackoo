@@ -161,7 +161,7 @@ stages:
 
           - task: DotNetCoreCLI@2
             displayName: Build Test Project & Code Coverage (Windows only)
-            condition: and(succeeded(), not(startsWith(variables['runtime'], 'win')))
+            condition: and(succeeded(), startsWith(variables['runtime'], 'win'))
             inputs:
               command: build
               projects: '**/*.Service*/*.csproj'
